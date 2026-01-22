@@ -1,0 +1,45 @@
+{
+  "name": "yomcoin-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@coinbase/wallet-sdk": "^4.3.7",
+    "@fortawesome/fontawesome-free": "^7.0.0",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@walletconnect/web3-provider": "^1.8.0",
+    "axios": "^1.10.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "ethers": "^6.14.4",
+    "lucide-react": "^0.523.0",
+    "next": "15.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.60.0",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.7.0",
+    "react-select": "^5.10.2",
+    "react-slick": "^0.30.3",
+    "recharts": "^3.1.0",
+    "slick-carousel": "^1.8.1",
+    "tailwind-merge": "^3.3.1",
+    "wallet-sdk": "^0.0.0",
+    "web3-provider": "^1.0.0",
+    "web3modal": "^1.9.12"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.4",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.5"
+  }
+}

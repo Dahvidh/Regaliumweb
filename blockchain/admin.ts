@@ -1,0 +1,1 @@
+export const ADMINS = ["0xYOUR_ADMIN_WALLET_ADDRESS"];
