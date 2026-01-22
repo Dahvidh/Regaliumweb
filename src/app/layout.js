@@ -1,27 +1,31 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Inter, JetBrains_Mono } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Sans font
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Mono font 
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata = {
   title: "Regalium",
   description:
-    "A mobile-first GameFi ecosystem enabling players in emerging markets to  earn, stake and trade digital value through games.",
+    "Regalium – A luxury blockchain gaming ecosystem",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
       </body>
