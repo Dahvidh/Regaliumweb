@@ -1,18 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-// Defining a custom hook to track screen width
-
+// --------------------
+// Custom Hook: Mobile Detection
+// --------------------
 const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false); // ✅ safe default
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkScreen = () => {
       setIsMobile(window.innerWidth <= 600);
     };
 
-    checkScreen(); // ✅ run once on mount
+    checkScreen();
     window.addEventListener("resize", checkScreen);
 
     return () => window.removeEventListener("resize", checkScreen);
@@ -20,14 +23,16 @@ const useIsMobile = () => {
 
   return isMobile;
 };
+
+// --------------------
+// Landing Page Component
+// --------------------
 const LandingPage = () => {
-  const targetDate = new Date("2026-12-31T00:00:00");
-  const isMobile = useIsMobile(); // Calling the custom hook here
+  const isMobile = useIsMobile();
 
-  // Countdown timer logic
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-  function calculateTimeLeft() {
+  // Memoized countdown calculator (no changing dependencies)
+  const calculateTimeLeft = useCallback(() => {
+    const targetDate = new Date("2026-12-31T00:00:00");
     const now = new Date();
     const difference = targetDate - now;
 
@@ -39,8 +44,11 @@ const LandingPage = () => {
         seconds: Math.floor((difference / 1000) % 60),
       };
     }
+
     return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }
+  }, []);
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -48,29 +56,30 @@ const LandingPage = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [calculateTimeLeft]);
 
   return (
     <div>
-      {/* Header */}
-      {/* <Header />*/}
-
-      {/* Main Content */}
-
+      {/* Logo Section */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#151313ff",
+          alignItems: "center",
+          paddingTop: "1rem",
         }}
       >
-        <img
-          src="/Regalium-removebg-preview.png" // Replace with the actual logo path
+        <Image
+          src="/Regalium-removebg-preview.png"
           alt="Regalium Logo"
-          style={{ width: "150px", marginBottom: "1rem" }}
+          width={150}
+          height={150}
+          priority
         />
       </div>
 
+      {/* Main Content */}
       <div
         style={{
           backgroundColor: "#151313ff",
@@ -79,7 +88,6 @@ const LandingPage = () => {
           minHeight: "92vh",
           display: "flex",
           flexDirection: "column",
-          //justifyContent: "center",
           alignItems: isMobile ? "flex-start" : "center",
           boxSizing: "border-box",
         }}
@@ -95,8 +103,6 @@ const LandingPage = () => {
           WE ARE ALMOST READY!!!
         </h1>
 
-        <br />
-
         {/* Countdown Timer */}
         <div
           style={{
@@ -109,9 +115,9 @@ const LandingPage = () => {
             marginTop: "1rem",
           }}
         >
-          {Object.keys(timeLeft).map((unit, index) => (
+          {Object.entries(timeLeft).map(([unit, value]) => (
             <div
-              key={index}
+              key={unit}
               style={{
                 backgroundColor: "#ccd1d466",
                 padding: "0.5rem 1rem",
@@ -119,9 +125,7 @@ const LandingPage = () => {
                 textAlign: "center",
               }}
             >
-              <span style={{ fontWeight: "bold" }}>
-                {timeLeft[unit] || "0"}
-              </span>
+              <span style={{ fontWeight: "bold" }}>{value}</span>
               <div style={{ fontSize: "0.75rem" }}>{unit}</div>
             </div>
           ))}
@@ -138,6 +142,7 @@ const LandingPage = () => {
         >
           GOT ANY QUESTION? REACH US HERE!
         </p>
+
         <div
           style={{
             display: "flex",
@@ -146,51 +151,26 @@ const LandingPage = () => {
             marginTop: "1rem",
           }}
         >
-          <a
-            href="https://www.facebook.com/"
-            style={{
-              color: "#443804ff",
-              fontSize: isMobile ? "2rem" : "1.5rem",
-            }}
-          >
-            <i className="fab fa-facebook"></i>
-          </a>
-          <a
-            href="https://x.com/"
-            style={{
-              color: "#443804ff",
-              fontSize: isMobile ? "2rem" : "1.5rem",
-            }}
-          >
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a
-            href="https://www.linkedin.com/"
-            style={{
-              color: "#443804ff",
-              fontSize: isMobile ? "2rem" : "1.5rem",
-            }}
-          >
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a
-            href="https://youtube.com"
-            style={{
-              color: "#443804ff",
-              fontSize: isMobile ? "2rem" : "1.5rem",
-            }}
-          >
-            <i className="fab fa-youtube"></i>
-          </a>
-          <a
-            href="https://whatsapp.com"
-            style={{
-              color: "#443804ff",
-              fontSize: isMobile ? "2rem" : "1.5rem",
-            }}
-          >
-            <i className="fab fa-whatsapp"></i>
-          </a>
+          {[
+            { icon: "facebook", url: "https://www.facebook.com/" },
+            { icon: "twitter", url: "https://x.com/" },
+            { icon: "instagram", url: "https://www.instagram.com/" },
+            { icon: "youtube", url: "https://youtube.com" },
+            { icon: "whatsapp", url: "https://whatsapp.com" },
+          ].map(({ icon, url }) => (
+            <a
+              key={icon}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "#443804ff",
+                fontSize: isMobile ? "2rem" : "1.5rem",
+              }}
+            >
+              <i className={`fab fa-${icon}`}></i>
+            </a>
+          ))}
         </div>
       </div>
     </div>
